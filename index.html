@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MAWAM — Imagine together. Then act.</title>
+  <meta name="description" content="MAWAM: Joint Imagination for Collaborative Robot Manipulation with a Multi-Agent World Action Model.">
+  <meta property="og:title" content="MAWAM — Imagine together. Then act.">
+  <meta property="og:description" content="Joint Imagination for Collaborative Robot Manipulation with a Multi-Agent World Action Model">
+  <meta property="og:image" content="https://embodiedcity.github.io/MAWAM/static/images/film_poster.jpg">
+  <link rel="canonical" href="https://embodiedcity.github.io/MAWAM/">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#000000">
+  <link rel="preload" href="static/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="static/css/style.css?v=20261122">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 32 32">
+      <defs>
+        <linearGradient id="mg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#6ac95e"/>
+          <stop offset="100%" stop-color="#9e7df2"/>
+        </linearGradient>
+      </defs>
+      <path d="M5.5 9.5C12 9.5 14.5 16 23.5 16" fill="none" stroke="#6ac95e" stroke-width="2.7" stroke-linecap="round"/>
+      <path d="M5.5 22.5C12 22.5 14.5 16 23.5 16" fill="none" stroke="#9e7df2" stroke-width="2.7" stroke-linecap="round"/>
+      <circle cx="5.5" cy="9.5" r="2.7" fill="#6ac95e"/>
+      <circle cx="5.5" cy="22.5" r="2.7" fill="#9e7df2"/>
+      <circle cx="24.5" cy="16" r="4.3" fill="url(#mg)"/>
+      <path d="M22.7 16.1l1.2 1.2 2.3-2.5" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-paper" viewBox="0 0 24 24">
+      <path d="M6 3h8l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linejoin="round"/>
+      <path d="M14 3v4h4M9 12h6M9 16h6" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-code" viewBox="0 0 24 24">
+      <path d="M8 7l-5 5 5 5M16 7l5 5-5 5M13.5 5l-3 14" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-play" viewBox="0 0 24 24">
+      <path d="M8 5v14l11-7z" fill="currentColor"/>
+    </symbol>
+  </defs>
+</svg>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <div class="nav-left">
+      <a class="brand" href="#top"><svg class="logo"><use href="#i-logo"/></svg><span>MAWAM</span></a>
+      <span class="navlogos" aria-label="Affiliated institutions">
+        <img src="assets/tsinghua.png" alt="Tsinghua University" title="Tsinghua University">
+        <img src="assets/ustc.png" alt="University of Science and Technology of China" title="University of Science and Technology of China">
+        <img src="assets/nju.png" alt="Nanjing University" title="Nanjing University">
+        <img src="assets/zhongguancun-academy.png" alt="Zhongguancun Academy" title="Zhongguancun Academy">
+        <img class="logo-wide" src="assets/manifold-ai.png" alt="Manifold AI" title="Manifold AI">
+      </span>
+    </div>
+    <div class="nav-links">
+      <a href="#idea">Idea</a>
+      <a href="#axes">Axes</a>
+      <a href="#harness">Harness</a>
+      <a href="#bench">MA-Bench</a>
+      <a href="#method">Method</a>
+      <a href="#imagine">Experiments</a>
+      <a href="assets/MAWAM.pdf" target="_blank" rel="noopener">Paper</a>
+      <a href="#cite">Cite</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ───────────── Hero ───────────── -->
+<header class="hero dark" id="top">
+  <div class="glow" aria-hidden="true"></div>
+  <p class="eyebrow rise" style="--d:.05s">MAWAM</p>
+  <h1 class="rise" style="--d:.15s"><span class="grad">Imagine together.</span><br>Then act.</h1>
+  <p class="lede rise" style="--d:.28s">A multi-agent world action model for collaborative robot manipulation.</p>
+
+  <div class="author-block rise" style="--d:.38s">
+    <p class="authors">
+      <span>Rongze Tang<sup>1,3</sup></span>
+      <span>Chenyu Zhou<sup>2,3</sup></span>
+      <span>Jianjie Fang<sup>4</sup></span>
+      <span>Ziming Liu<sup>4</sup></span>
+      <span>Zhaolu Wang<sup>3</sup></span>
+      <span>Ziyou Wang<sup>4</sup></span>
+      <br class="au-br">
+      <span>Xvyuan Liu<sup>4</sup></span>
+      <span>Wei Wu<sup>5</sup></span>
+      <span>Chen Gao<sup>3,4,&dagger;</sup></span>
+      <span>Yong Li<sup>4</sup></span>
+      <span>Zhibo Chen<sup>1,3,&dagger;</sup></span>
+    </p>
+    <p class="affil">
+      <span><sup>1</sup>University of Science and Technology of China</span>
+      <span><sup>2</sup>Nanjing University</span>
+      <span><sup>3</sup>Zhongguancun Academy</span>
+      <span><sup>4</sup>Tsinghua University</span>
+      <span><sup>5</sup>Manifold AI</span>
+    </p>
+    <p class="affil-note"><sup>&dagger;</sup>Corresponding authors &nbsp;&middot;&nbsp; <a href="mailto:chgao96@gmail.com">chgao96@gmail.com</a>, <a href="mailto:chenzhibo@ustc.edu.cn">chenzhibo@ustc.edu.cn</a></p>
+  </div>
+
+  <div class="cta rise" style="--d:.48s">
+    <a class="btn btn-paper" href="assets/MAWAM.pdf" target="_blank" rel="noopener"><svg><use href="#i-paper"/></svg>Paper (PDF)</a>
+    <a class="btn" href="#film"><svg><use href="#i-play"/></svg>Watch the film</a>
+    <span class="btn btn-ghost off" aria-disabled="true"><svg><use href="#i-code"/></svg>Code &middot; coming soon</span>
+    <span class="btn btn-ghost off" aria-disabled="true">Data &middot; coming soon</span>
+  </div>
+
+  <div class="film-wrap" id="film">
+    <div class="stagebox" id="stagebox">
+      <video class="film" id="filmv" autoplay muted playsinline preload="auto" poster="static/images/film_poster.jpg">
+        <source src="static/videos/mawam_film.mp4" type="video/mp4">
+      </video>
+      <div class="wall" id="wall" aria-label="All shots in the film"></div>
+      <div class="filmbar" id="filmbar">
+        <button id="sound" aria-label="Sound on">♪ Sound on</button>
+        <button id="skip">Skip to all shots ↘</button>
+      </div>
+    </div>
+    <div class="wallbar" id="wallbar">
+      <span>Click any tile to inspect.</span>
+      <button id="replay">▶ Replay the film</button>
+    </div>
+  </div>
+</header>
+
+<!-- ───────────── 1. Idea ───────────── -->
+<section class="light" id="idea">
+  <div class="wrap">
+    <p class="eyebrow reveal">The idea</p>
+    <h2 class="reveal">One team.<br>One imagined future.</h2>
+    <p class="sub reveal">World action models imagine future views to decode actions. MAWAM makes the agent a first-class axis of that imagination.</p>
+
+    <div class="bento three">
+      <div class="tile reveal">
+        <span class="mark no">✕</span>
+        <h3>One model per robot</h3>
+        <p>Each robot imagines a private future and treats its partner as scenery.</p>
+      </div>
+      <div class="tile reveal" style="--d:.08s">
+        <span class="mark no">✕</span>
+        <h3>One model, all views</h3>
+        <p>Pooling cameras into one flat stream blurs which view and action belong to whom.</p>
+      </div>
+      <div class="tile feature reveal" style="--d:.16s">
+        <span class="mark yes">✓</span>
+        <h3>MAWAM</h3>
+        <p>All robots share one causal sequence and one set of weights — imagine together, act per robot.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── 2. Why · When · Who Axes Definition ───────────── -->
+<section class="dark" id="axes">
+  <div class="wrap">
+    <p class="eyebrow reveal">Task definition</p>
+    <h2 class="reveal">Why. When. <span class="grad">Who.</span></h2>
+    <p class="sub reveal">A task is multi-agent-necessary when no single robot suffices while the team succeeds.</p>
+
+    <div class="bento three axes">
+      <div class="tile glass reveal">
+        <h4>Why</h4>
+        <h3>Complementarity</h3>
+        <p>Information split across views. Workspaces beyond one robot’s reach. Contacts or payload exceeding a single body.</p>
+      </div>
+      <div class="tile glass reveal" style="--d:.08s">
+        <h4>When</h4>
+        <h3>Temporal coupling</h3>
+        <p>Asynchronous hand-offs, partially synchronous hold-and-act, and synchronous motion locked at every instant.</p>
+      </div>
+      <div class="tile glass reveal" style="--d:.16s">
+        <h4>Who</h4>
+        <h3>Embodiment</h3>
+        <p>Homogeneous teams with interchangeable roles, and heterogeneous teams bridging distinct observation and action spaces.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── 3. MA-Task Harness + Dynamic Co-Evolution Trace ───────────── -->
+<section class="light" id="harness">
+  <div class="wrap">
+    <p class="eyebrow reveal">MA-Task Harness</p>
+    <h2 class="reveal">From an idea<br>to a verified task.</h2>
+    <p class="sub reveal">Generator and evaluator sub-agents co-evolve in simulation until demonstrations and rules converge.</p>
+
+    <figure class="figcard reveal">
+      <img src="static/images/harness.png" alt="MA-Task Harness">
+    </figure>
+
+    <div class="coev-card reveal" id="coev">
+      <div class="coev-top">
+        <div class="coev-title">
+          <span class="coev-kicker">Co-evolution trace</span>
+          <h3>Open door, place pot <i>Panda + ALOHA</i></h3>
+        </div>
+        <div class="coev-tabs" id="coev-tabs" role="tablist"></div>
+      </div>
+      <div class="coev-prog"><i id="coev-bar"></i></div>
+      <div class="coev-body">
+        <div class="coev-stage" id="coev-stage"></div>
+        <div class="coev-flow" id="coev-flow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── 4. MA-Bench ───────────── -->
+<section class="dark bench" id="bench">
+  <div class="wrap">
+    <p class="eyebrow reveal">MA-Bench</p>
+    <h2 class="reveal">Seven tasks.<br><span class="dim">None solvable alone.</span></h2>
+    <p class="sub reveal">Spanning all temporal regimes, complementarity types, and embodiment pairings in closed loop.</p>
+
+    <div class="stats">
+      <div class="stat reveal"><b class="grad" data-count="7">7</b><span>collaborative tasks</span></div>
+      <div class="stat reveal" style="--d:.08s"><b class="grad" data-count="700">700</b><span>certified demonstration pairs</span></div>
+      <div class="stat reveal" style="--d:.16s"><b class="grad" data-count="25">25</b><span>Hz native actions, three views per robot</span></div>
+    </div>
+  </div>
+
+  <div class="rail-wrap reveal">
+    <div class="rail" id="rail"></div>
+    <div class="rail-nav wrap">
+      <button id="prev" aria-label="Previous task">‹</button>
+      <button id="next" aria-label="Next task">›</button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="clip reveal">
+      <video id="clipv" muted loop playsinline preload="metadata" poster="static/wall/door_main.jpg">
+        <source src="static/wall/door_main_hd.mp4" type="video/mp4">
+      </video>
+      <div class="clip-cap">
+        <h3 id="clipt">Open door, place pot</h3>
+        <p id="clipp"><b class="ca">Panda</b> holds a spring-loaded door. <b class="cb">ALOHA</b> carries the pot inside with both arms.</p>
+      </div>
+    </div>
+
+    <div class="bento three metrics">
+      <div class="tile glass reveal"><h3>Role Score <i>S<sub>k</sub></i></h3><p>How much of its own role each robot completes.</p></div>
+      <div class="tile glass reveal" style="--d:.08s"><h3>Collaboration Score <i>S</i><sub>collab</sub></h3><p>How many joint milestones the team satisfies inside its shared window.</p></div>
+      <div class="tile glass reveal" style="--d:.16s"><h3>Joint Success Rate</h3><p>Everything at once. High roles with low collaboration isolates coordination failure.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── 5. Method ───────────── -->
+<section class="white" id="method">
+  <div class="wrap">
+    <p class="eyebrow reveal">Method</p>
+    <h2 class="reveal">One sequence.<br>Shared weights.</h2>
+
+    <figure class="figcard flat arch-wrap reveal">
+      <div class="arch-stage">
+        <img src="static/images/mawam_arch.png" alt="MAWAM architecture">
+        <svg class="arch-svg" viewBox="0 0 498.2 199.2" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <filter id="fglow" x="-25%" y="-25%" width="150%" height="150%">
+              <feGaussianBlur stdDeviation="1.3" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <path class="fl fl-g" d="M 81.1 21.7 L 137.1 21.7 L 137.1 43.8"/>
+          <path class="fl fl-a" d="M 58.3 58.6 L 209.8 58.6 L 209.8 34.0 L 288.0 34.0"/>
+          <path class="fl fl-a d2" d="M 209.8 58.6 L 209.8 121.6 L 267.4 121.6"/>
+          <path class="fl fl-b d1" d="M 58.3 102.6 L 209.8 102.6 L 209.8 57.2 L 288.0 57.2"/>
+          <path class="fl fl-b d3" d="M 209.8 102.6 L 209.8 145.6 L 267.4 145.6"/>
+          <path class="fl fl-c d2" d="M 58.3 158.6 L 209.8 158.6 L 209.8 80.4 L 288.0 80.4"/>
+          <path class="fl fl-c d1" d="M 209.8 158.6 L 209.8 175.6 L 267.4 175.6"/>
+          <path class="fl fl-sync" d="M 300.3 28.5 L 299.0 75.0 M 324.5 28.5 L 323.1 75.0 M 348.6 28.5 L 347.2 75.0"/>
+          <path class="fl fl-loop" d="M 400.0 149.2 L 468.8 149.2 L 468.8 179.8 L 399.5 179.8 L 399.5 149.2 Z"/>
+        </svg>
+      </div>
+    </figure>
+
+    <div class="bento four">
+      <div class="tile soft reveal"><h3>Joint causal attention</h3><p>Self-attention runs over the union of all robots. The robot index never gates an attention edge.</p></div>
+      <div class="tile soft reveal" style="--d:.06s"><h3>Hierarchical language</h3><p>A global goal reaches every robot through gated cross-attention; each attends locally to its role.</p></div>
+      <div class="tile soft reveal" style="--d:.12s"><h3>Identity &amp; role</h3><p>A Fourier ID feature and a role vector tell each weight-shared stream which robot it is.</p></div>
+      <div class="tile soft reveal" style="--d:.18s"><h3>Agent-axis curriculum</h3><p>Single-agent control is axis length one. Learn each role first, then expand the axis.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ───────────── 6. Experiments: Shared 3D Imagination & Results ───────────── -->
+<section class="dark" id="imagine">
+  <div class="wrap">
+    <p class="eyebrow reveal">Shared 3D imagination</p>
+    <h2 class="reveal">Two robots.<br><span class="grad">One 3D future.</span></h2>
+    <p class="sub reveal">Decoded 7.68 s future videos on <i>Lift tray, keep blocks</i> keep inter-robot 3D tray disagreement at 1.74 mm — 10.9× tighter than without joint imagination.</p>
+
+    <div class="exp-tray reveal">
+      <div class="tray-vid-card">
+        <div class="tray-vid-head">
+          <span>VAE-decoded rollout · <i>Lift tray, keep blocks</i></span>
+          <div class="tray-leg">
+            <i class="la"></i><span>A · ALOHA</span>
+            <i class="lb-dot"></i><span>B · ALOHA</span>
+          </div>
+        </div>
+        <div class="tray-vid-box">
+          <video id="trayv" autoplay muted loop playsinline preload="metadata" poster="static/images/tray_imagination_exp.jpg">
+            <source src="static/videos/tray_imagination_exp.mp4" type="video/mp4">
+          </video>
+          <span class="tv-tag tv-top">Imagined (dashed)</span>
+          <span class="tv-tag tv-bot">Executed (solid)</span>
+        </div>
+      </div>
+
+      <div class="tray-chart-card">
+        <div class="tray-vid-head">
+          <span>3D tray pose disagreement (mm)</span>
+          <span class="tray-readout" id="tray-readout">Mean: <b>1.74 mm</b> vs. 18.74 mm</span>
+        </div>
+        <div class="tray-svg-wrap" id="tray-chart"></div>
+        <div class="tray-cleg">
+          <span><i style="background:#3b82f6"></i>MAWAM (<b>1.74 mm</b>)</span>
+          <span><i style="background:#94a3b8"></i>LingBot-VA per-robot (5.54 mm)</span>
+          <span><i style="background:#ef4444"></i>w/o joint imagination (<b>18.74 mm</b>)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="white" id="results">
+  <div class="wrap">
+    <p class="eyebrow reveal">Results</p>
+    <h2 class="reveal">82.7% on MA-Bench.<br><span class="dim">Real-time on hardware.</span></h2>
+    <p class="sub reveal">Evaluated over 100 independent trajectory trials per simulation task and 20 closed-loop trials per real-robot task.</p>
+
+    <h5 class="reveal">Simulation · MA-Bench · 100 independent trajectory trials per task</h5>
+    <div class="tablecard reveal"><table id="tab-main"></table></div>
+
+    <h5 class="reveal">Real robots · Franka + dual-arm Cobot · 20 trials per task</h5>
+    <div class="tablecard reveal"><table id="tab-real"></table></div>
+  </div>
+</section>
+
+<!-- ───────────── 7. Cite ───────────── -->
+<section class="dark" id="cite">
+  <div class="wrap narrow">
+    <p class="eyebrow reveal">Cite</p>
+    <h2 class="reveal">BibTeX</h2>
+    <div class="bib reveal">
+      <button id="copy">Copy</button>
+<pre id="bibtext">@article{tang2026mawam,
+  title   = {MAWAM: Joint Imagination for Collaborative Robot Manipulation
+             with a Multi-Agent World Action Model},
+  author  = {Rongze Tang and Chenyu Zhou and Jianjie Fang and Ziming Liu and
+             Zhaolu Wang and Ziyou Wang and Xvyuan Liu and Wei Wu and
+             Chen Gao and Yong Li and Zhibo Chen},
+  journal = {arXiv preprint},
+  year    = {2026}
+}</pre>
+    </div>
+  </div>
+</section>
+
+<footer class="dark">
+  <div class="wrap"><p>MAWAM &middot; Imagine together. Then act.</p></div>
+</footer>
+
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Shot viewer">
+  <div class="lb-in">
+    <video id="lbv" playsinline loop controls muted></video>
+    <div class="lb-cap"><h3 id="lbt"></h3><p id="lbm"></p></div>
+  </div>
+  <button class="lb-x" id="lbx" aria-label="Close">✕</button>
+  <button class="lb-nav lb-prev" id="lbp" aria-label="Previous">‹</button>
+  <button class="lb-nav lb-next" id="lbn" aria-label="Next">›</button>
+</div>
+<script src="static/wall/wall.js"></script>
+<script src="static/js/main.js"></script>
+</body>
+</html>
