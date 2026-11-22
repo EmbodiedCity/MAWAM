@@ -9,10 +9,10 @@
   <meta property="og:description" content="Joint Imagination for Collaborative Robot Manipulation with a Multi-Agent World Action Model">
   <meta property="og:image" content="https://embodiedcity.github.io/MAWAM/static/images/film_poster.jpg">
   <link rel="canonical" href="https://embodiedcity.github.io/MAWAM/">
-  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/icon.svg?v=3" type="image/svg+xml">
   <meta name="theme-color" content="#000000">
   <link rel="preload" href="static/fonts/InterVariable.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="static/css/style.css?v=20261122">
+  <link rel="stylesheet" href="static/css/style.css?v=20261122c">
 </head>
 <body>
 
@@ -20,17 +20,28 @@
   <defs>
     <symbol id="i-logo" viewBox="0 0 32 32">
       <defs>
-        <linearGradient id="mg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#6ac95e"/>
-          <stop offset="100%" stop-color="#9e7df2"/>
+        <linearGradient id="mg" x1="3" y1="8" x2="29" y2="8" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#5ec953"/>
+          <stop offset="50%" stop-color="#52b6d8"/>
+          <stop offset="100%" stop-color="#9e7af2"/>
+        </linearGradient>
+        <linearGradient id="mgSoft" x1="5" y1="2" x2="27" y2="15" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#5ec953" stop-opacity="0.20"/>
+          <stop offset="100%" stop-color="#9e7af2" stop-opacity="0.22"/>
         </linearGradient>
       </defs>
-      <path d="M5.5 9.5C12 9.5 14.5 16 23.5 16" fill="none" stroke="#6ac95e" stroke-width="2.7" stroke-linecap="round"/>
-      <path d="M5.5 22.5C12 22.5 14.5 16 23.5 16" fill="none" stroke="#9e7df2" stroke-width="2.7" stroke-linecap="round"/>
-      <circle cx="5.5" cy="9.5" r="2.7" fill="#6ac95e"/>
-      <circle cx="5.5" cy="22.5" r="2.7" fill="#9e7df2"/>
-      <circle cx="24.5" cy="16" r="4.3" fill="url(#mg)"/>
-      <path d="M22.7 16.1l1.2 1.2 2.3-2.5" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9.6 14.2 H22.4 C24.9 14.2 26.8 12.4 26.8 10.1 C26.8 8.0 25.2 6.2 23.1 6.0 C22.2 3.6 19.7 2.0 16.5 2.0 C13.3 2.0 10.7 3.6 9.9 6.0 C7.6 6.2 5.7 8.0 5.7 10.2 C5.7 12.4 7.5 14.2 9.6 14.2 Z"
+            fill="url(#mgSoft)" stroke="url(#mg)" stroke-width="2.15" stroke-linejoin="round"/>
+      <path d="M16 4.7 L17.0 7.1 L19.4 8.1 L17.0 9.1 L16 11.5 L15.0 9.1 L12.6 8.1 L15.0 7.1 Z" fill="url(#mg)"/>
+      <path d="M2.2 29.5 H8.8" stroke="#5ec953" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M5.8 29.2 L3.1 21.8 L10.5 23.2" fill="none" stroke="#5ec953" stroke-width="2.45" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="3.1" cy="21.8" r="1.75" fill="#5ec953"/>
+      <path d="M13.1 20.8 H10.7 V25.6 H13.1" fill="none" stroke="#5ec953" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M23.2 29.5 H29.8" stroke="#9e7af2" stroke-width="2.3" stroke-linecap="round"/>
+      <path d="M26.2 29.2 L28.9 21.8 L21.5 23.2" fill="none" stroke="#9e7af2" stroke-width="2.45" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="28.9" cy="21.8" r="1.75" fill="#9e7af2"/>
+      <path d="M18.9 20.8 H21.3 V25.6 H18.9" fill="none" stroke="#9e7af2" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="14.1" y="21.3" width="3.8" height="3.8" rx="0.9" fill="url(#mg)"/>
     </symbol>
     <symbol id="i-paper" viewBox="0 0 24 24">
       <path d="M6 3h8l4 4v14H6z" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linejoin="round"/>
@@ -112,7 +123,7 @@
   <div class="film-wrap" id="film">
     <div class="stagebox" id="stagebox">
       <video class="film" id="filmv" autoplay muted playsinline preload="auto" poster="static/images/film_poster.jpg">
-        <source src="static/videos/mawam_film.mp4?v=2" type="video/mp4">
+        <source src="static/videos/mawam_film.mp4?v=3" type="video/mp4">
       </video>
       <div class="wall" id="wall" aria-label="All shots in the film"></div>
       <div class="filmbar" id="filmbar">
