@@ -338,38 +338,52 @@ $('#copy').addEventListener('click', e => {
     const t = list[i], el = document.createElement('button');
     el.className = `tile-w ${t.kind}`; el.style.gridRow = r; el.style.gridColumn = `${c} / span 2`;
     const d = Math.hypot((c + 1 - 6.5) / 2, r - 3.5); el.style.setProperty('--dl', (0.08 + d * 0.06).toFixed(2) + 's');
-    el.innerHTML = `<video muted loop playsinline preload="metadata" poster="static/wall/${t.poster}"><source src="static/wall/${t.src}" type="video/mp4"></video>
+    el.innerHTML = `<video muted loop playsinline preload="none" poster="static/wall/${t.poster}" src="static/wall/${t.src}"></video>
       <span class="tl">${t.title}</span>`;
     el.addEventListener('click', () => openLB(T.indexOf(t)));
     wall.appendChild(el);
   });
 
-  // Seamless infinite-loop center tile (preloaded & stutter-free!)
+  // Seamless infinite-loop center tile (first in DOM so it gets #1 network & hardware-decoder priority!)
   const centre = document.createElement('div');
   centre.className = 'tile-w centre';
-  centre.innerHTML = `<video id="heroloop" muted loop playsinline preload="auto" poster="static/wall/hero_v4.jpg"><source src="static/wall/hero_v4.mp4" type="video/mp4"></video>
+  centre.innerHTML = `<video id="heroloop" muted defaultMuted loop playsinline webkit-playsinline preload="auto" poster="static/wall/hero_v5.jpg" src="static/wall/hero_v5.mp4"></video>
     <span class="tl">Imagine together. Then act.</span>`;
-  wall.appendChild(centre);
+  wall.prepend(centre);
   const heroLoop = $('#heroloop');
+  if (heroLoop) {
+    heroLoop.muted = true;
+    heroLoop.defaultMuted = true;
+    heroLoop.playsInline = true;
+    heroLoop.loop = true;
+    heroLoop.load();
+  }
   const tileVideos = () => $$('#wall video');
 
-  // Ensure zero-gap loop wrap on browsers whose native loop has a decoder flush pause
+  const ensureHeroPlaying = () => {
+    if (!heroLoop || !box.classList.contains('walled') || $('#lb')?.classList.contains('on')) return;
+    heroLoop.muted = true;
+    if (heroLoop.paused) heroLoop.play().catch(() => {});
+  };
   if (heroLoop) {
-    heroLoop.addEventListener('timeupdate', () => {
-      if (heroLoop.duration > 0 && heroLoop.currentTime >= heroLoop.duration - 0.04) {
-        heroLoop.currentTime = 0;
-        heroLoop.play().catch(() => {});
-      }
-    });
+    ['loadeddata', 'canplay', 'canplaythrough', 'stalled', 'suspend'].forEach(ev =>
+      heroLoop.addEventListener(ev, ensureHeroPlaying)
+    );
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) ensureHeroPlaying(); });
+    setInterval(ensureHeroPlaying, 600);
   }
 
   const toWall = () => {
     // Full-frame fade-out from the outer perimeter — never shrink into a central square!
     filmv.pause();
     box.classList.add('walled'); wrap.classList.add('walled');
+    ensureHeroPlaying();
     tileVideos().forEach((v, idx) => {
-      if (v === heroLoop) v.play().catch(() => {});
-      else setTimeout(() => v.play().catch(() => {}), idx * 18);
+      if (v === heroLoop) return;
+      v.muted = true;
+      setTimeout(() => {
+        if (box.classList.contains('walled')) v.play().catch(() => {});
+      }, 120 + idx * 35);
     });
   };
   const toFilm = () => {
