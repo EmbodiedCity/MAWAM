@@ -347,7 +347,7 @@ $('#copy').addEventListener('click', e => {
   // Seamless infinite-loop center tile (preloaded & stutter-free!)
   const centre = document.createElement('div');
   centre.className = 'tile-w centre';
-  centre.innerHTML = `<video id="heroloop" muted loop playsinline preload="auto" poster="static/wall/hero.jpg?v=3"><source src="static/wall/hero.mp4?v=3" type="video/mp4"></video>
+  centre.innerHTML = `<video id="heroloop" muted loop playsinline preload="auto" poster="static/wall/hero_v4.jpg"><source src="static/wall/hero_v4.mp4" type="video/mp4"></video>
     <span class="tl">Imagine together. Then act.</span>`;
   wall.appendChild(centre);
   const heroLoop = $('#heroloop');
