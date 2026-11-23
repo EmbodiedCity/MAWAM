@@ -64,7 +64,7 @@ const COEV_ROUNDS = [
     cur = (i + COEV_ROUNDS.length) % COEV_ROUNDS.length;
     const r = COEV_ROUNDS[cur];
     [...tabs.children].forEach((b, j) => b.classList.toggle('on', j === cur));
-    stage.innerHTML = `<img src="${r.img}" alt="${r.tab}"><svg>${r.svg}</svg><span class="coev-chip" style="background:${r.chip[1]}">${r.chip[0]}</span>`;
+    stage.innerHTML = `<img loading="lazy" decoding="async" src="${r.img}" alt="${r.tab}"><svg>${r.svg}</svg><span class="coev-chip" style="background:${r.chip[1]}">${r.chip[0]}</span>`;
     flow.innerHTML = `
       <div class="coev-step ${r.s1.cls}">
         <span class="coev-badge" style="color:${r.s1.badgeCol}">${r.s1.badge}</span>
@@ -122,8 +122,10 @@ const inView = new Set();
 const setClip = t => {
   if (!clipv) return;
   const wantSrc = `static/wall/${t.key}_main_hd.mp4`;
-  if (!clipv.getAttribute('data-task') || clipv.getAttribute('data-task') !== t.key) {
+  if (!clipv.getAttribute('data-task') || clipv.getAttribute('data-task') !== t.key || !clipv.getAttribute('src')) {
     clipv.setAttribute('data-task', t.key);
+    clipv.removeAttribute('data-poster');
+    clipv.removeAttribute('data-src');
     clipv.poster = `static/wall/${t.key}_main.jpg`;
     clipv.src = wantSrc;
     clipt.textContent = t.name;
@@ -270,9 +272,20 @@ addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimat
 addEventListener('resize', onScroll);
 onScroll();
 
-$$('video:not(#filmv):not(#lbv)').filter(v => !v.closest('#wall')).forEach(v => new IntersectionObserver(es => es.forEach(e => {
-  if (e.isIntersecting) v.play().catch(() => {}); else v.pause();
-}), { threshold: .35 }).observe(v));
+const hydrateLazyVideo = v => {
+  if (v.dataset.poster) { v.poster = v.dataset.poster; delete v.dataset.poster; }
+  if (v.dataset.src) { v.src = v.dataset.src; delete v.dataset.src; v.preload = 'metadata'; }
+};
+$$('video:not(#filmv):not(#lbv)').filter(v => !v.closest('#wall')).forEach(v => {
+  new IntersectionObserver((es, obs) => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    hydrateLazyVideo(v);
+    obs.unobserve(v);
+  }), { rootMargin: '700px 0px' }).observe(v);
+  new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { hydrateLazyVideo(v); v.play().catch(() => {}); } else v.pause();
+  }), { threshold: .35 }).observe(v);
+});
 
 // ---------------------------------------------------------------------------
 // 5. Result Tables (Finalized Paper Numbers: 100 independent trials / 20 real trials)
@@ -338,16 +351,16 @@ $('#copy').addEventListener('click', e => {
     const t = list[i], el = document.createElement('button');
     el.className = `tile-w ${t.kind}`; el.style.gridRow = r; el.style.gridColumn = `${c} / span 2`;
     const d = Math.hypot((c + 1 - 6.5) / 2, r - 3.5); el.style.setProperty('--dl', (0.08 + d * 0.06).toFixed(2) + 's');
-    el.innerHTML = `<video muted loop playsinline preload="none" poster="static/wall/${t.poster}" src="static/wall/${t.src}"></video>
+    el.innerHTML = `<video muted loop playsinline preload="none" data-poster="static/wall/${t.poster}" data-src="static/wall/${t.src}"></video>
       <span class="tl">${t.title}</span>`;
     el.addEventListener('click', () => openLB(T.indexOf(t)));
     wall.appendChild(el);
   });
 
-  // Seamless infinite-loop center tile (first in DOM so it gets #1 network & hardware-decoder priority!)
+  // Seamless infinite-loop center tile (deferred until after hero film starts so 0 requests compete on first paint!)
   const centre = document.createElement('div');
   centre.className = 'tile-w centre';
-  centre.innerHTML = `<video id="heroloop" muted defaultMuted loop playsinline webkit-playsinline preload="auto" poster="static/wall/hero_v5.jpg" src="static/wall/hero_v5.mp4"></video>
+  centre.innerHTML = `<video id="heroloop" muted defaultMuted loop playsinline webkit-playsinline preload="none" data-poster="static/wall/hero_v5.jpg" data-src="static/wall/hero_v5.mp4"></video>
     <span class="tl">Imagine together. Then act.</span>`;
   wall.prepend(centre);
   const heroLoop = $('#heroloop');
@@ -356,9 +369,43 @@ $('#copy').addEventListener('click', e => {
     heroLoop.defaultMuted = true;
     heroLoop.playsInline = true;
     heroLoop.loop = true;
-    heroLoop.load();
   }
   const tileVideos = () => $$('#wall video');
+
+  let wallHydrated = false;
+  const hydrateWall = (immediate = false) => {
+    if (wallHydrated) {
+      if (immediate) {
+        tileVideos().forEach(v => {
+          if (v.dataset.poster) { v.poster = v.dataset.poster; delete v.dataset.poster; }
+          if (v.dataset.src) { v.src = v.dataset.src; delete v.dataset.src; }
+        });
+      }
+      return;
+    }
+    wallHydrated = true;
+    if (heroLoop) {
+      if (heroLoop.dataset.poster) { heroLoop.poster = heroLoop.dataset.poster; delete heroLoop.dataset.poster; }
+      if (heroLoop.dataset.src) { heroLoop.src = heroLoop.dataset.src; delete heroLoop.dataset.src; }
+      heroLoop.preload = 'auto';
+      heroLoop.load();
+    }
+    tileVideos().forEach((v, idx) => {
+      if (v === heroLoop) return;
+      const apply = () => {
+        if (v.dataset.poster) { v.poster = v.dataset.poster; delete v.dataset.poster; }
+        if (v.dataset.src) { v.src = v.dataset.src; delete v.dataset.src; }
+      };
+      immediate ? apply() : setTimeout(apply, 600 + idx * 90);
+    });
+  };
+  let bgTimer = null;
+  const scheduleWallHydrate = (ms = 4500) => {
+    if (wallHydrated || bgTimer) return;
+    bgTimer = setTimeout(() => hydrateWall(false), ms);
+  };
+  filmv.addEventListener('playing', () => scheduleWallHydrate(4500), { once: true });
+  addEventListener('load', () => scheduleWallHydrate(9000), { once: true });
 
   const ensureHeroPlaying = () => {
     if (!heroLoop || !box.classList.contains('walled') || $('#lb')?.classList.contains('on')) return;
@@ -375,6 +422,7 @@ $('#copy').addEventListener('click', e => {
 
   const toWall = () => {
     // Full-frame fade-out from the outer perimeter — never shrink into a central square!
+    hydrateWall(true);
     filmv.pause();
     box.classList.add('walled'); wrap.classList.add('walled');
     ensureHeroPlaying();
