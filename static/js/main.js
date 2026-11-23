@@ -121,12 +121,12 @@ const rail = $('#rail'), clipv = $('#clipv'), clipt = $('#clipt'), clipp = $('#c
 const inView = new Set();
 const setClip = t => {
   if (!clipv) return;
-  const wantSrc = `static/wall/${t.key}_main_hd.mp4`;
+  const wantSrc = `static/wall/${t.key}_main_hd.mp4?v=9`;
   if (!clipv.getAttribute('data-task') || clipv.getAttribute('data-task') !== t.key || !clipv.getAttribute('src')) {
     clipv.setAttribute('data-task', t.key);
     clipv.removeAttribute('data-poster');
     clipv.removeAttribute('data-src');
-    clipv.poster = `static/wall/${t.key}_main.jpg`;
+    clipv.poster = `static/wall/${t.key}_main.jpg?v=9`;
     clipv.src = wantSrc;
     clipt.textContent = t.name;
     clipp.innerHTML = t.clipCap;
@@ -139,7 +139,9 @@ TASKS.forEach(t => {
   el.className = 'task';
   el.innerHTML = `
     <div class="stage">
-      ${[0, 1, 2].map(i => `<img loading="lazy" class="${i ? '' : 'on'}" src="static/images/bench_v2/${t.key}_${i}.jpg" alt="${t.name}, keyframe ${i + 1}">`).join('')}
+      ${[0, 1, 2].map(i => i === 0
+        ? `<img loading="lazy" decoding="async" class="on" src="static/images/bench_v2/${t.key}_0.jpg?v=9" alt="${t.name}, keyframe 1">`
+        : `<img decoding="async" data-src="static/images/bench_v2/${t.key}_${i}.jpg?v=9" alt="${t.name}, keyframe ${i + 1}">`).join('')}
       <div class="bars">${[0, 1, 2].map(() => '<i></i>').join('')}</div>
     </div>
     <div class="body">
@@ -149,8 +151,12 @@ TASKS.forEach(t => {
       <p>${t.text}</p>
     </div>`;
   const imgs = [...el.querySelectorAll('.stage img')], bars = [...el.querySelectorAll('.bars i')];
+  const hydrateFrames = () => imgs.forEach(im => {
+    if (im.dataset.src) { im.src = im.dataset.src; delete im.dataset.src; }
+  });
   let k = 0;
   el.show = i => {
+    hydrateFrames();
     k = (i + 3) % 3;
     imgs.forEach((im, j) => im.classList.toggle('on', j === k));
     bars.forEach((b, j) => { b.classList.toggle('done', j < k); b.classList.remove('on'); });
@@ -351,16 +357,16 @@ $('#copy').addEventListener('click', e => {
     const t = list[i], el = document.createElement('button');
     el.className = `tile-w ${t.kind}`; el.style.gridRow = r; el.style.gridColumn = `${c} / span 2`;
     const d = Math.hypot((c + 1 - 6.5) / 2, r - 3.5); el.style.setProperty('--dl', (0.08 + d * 0.06).toFixed(2) + 's');
-    el.innerHTML = `<video muted loop playsinline preload="none" data-poster="static/wall/${t.poster}" data-src="static/wall/${t.src}"></video>
+    el.innerHTML = `<video muted loop playsinline preload="none" data-dist="${d.toFixed(3)}" data-poster="static/wall/${t.poster}?v=9" data-src="static/wall/${t.src}?v=9"></video>
       <span class="tl">${t.title}</span>`;
     el.addEventListener('click', () => openLB(T.indexOf(t)));
     wall.appendChild(el);
   });
 
-  // Seamless infinite-loop center tile (deferred until after hero film starts so 0 requests compete on first paint!)
+  // Seamless infinite-loop center tile (pre-warmed gently during browser idle so All shots opens instantaneously!)
   const centre = document.createElement('div');
   centre.className = 'tile-w centre';
-  centre.innerHTML = `<video id="heroloop" muted defaultMuted loop playsinline webkit-playsinline preload="none" data-poster="static/wall/hero_v5.jpg" data-src="static/wall/hero_v5.mp4"></video>
+  centre.innerHTML = `<video id="heroloop" muted defaultMuted loop playsinline webkit-playsinline preload="none" data-poster="static/wall/hero_v5.jpg?v=9" data-src="static/wall/hero_v5.mp4?v=9"></video>
     <span class="tl">Imagine together. Then act.</span>`;
   wall.prepend(centre);
   const heroLoop = $('#heroloop');
@@ -371,44 +377,54 @@ $('#copy').addEventListener('click', e => {
     heroLoop.loop = true;
   }
   const tileVideos = () => $$('#wall video');
+  const periphVideos = () => tileVideos().filter(v => v !== heroLoop).sort((a, b) => (+a.dataset.dist || 0) - (+b.dataset.dist || 0));
 
-  let wallHydrated = false;
-  const hydrateWall = (immediate = false) => {
-    if (wallHydrated) {
-      if (immediate) {
-        tileVideos().forEach(v => {
-          if (v.dataset.poster) { v.poster = v.dataset.poster; delete v.dataset.poster; }
-          if (v.dataset.src) { v.src = v.dataset.src; delete v.dataset.src; }
-        });
-      }
-      return;
-    }
-    wallHydrated = true;
-    if (heroLoop) {
-      if (heroLoop.dataset.poster) { heroLoop.poster = heroLoop.dataset.poster; delete heroLoop.dataset.poster; }
-      if (heroLoop.dataset.src) { heroLoop.src = heroLoop.dataset.src; delete heroLoop.dataset.src; }
+  const isFilmBusy = () => !filmv.paused && !filmv.ended;
+
+  const hydrateHeroLoop = () => {
+    if (!heroLoop) return;
+    if (heroLoop.dataset.poster) { heroLoop.poster = heroLoop.dataset.poster; delete heroLoop.dataset.poster; }
+    if (heroLoop.dataset.src) {
+      heroLoop.src = heroLoop.dataset.src;
+      delete heroLoop.dataset.src;
       heroLoop.preload = 'auto';
       heroLoop.load();
     }
-    tileVideos().forEach((v, idx) => {
-      if (v === heroLoop) return;
-      const apply = () => {
-        if (v.dataset.poster) { v.poster = v.dataset.poster; delete v.dataset.poster; }
-        if (v.dataset.src) { v.src = v.dataset.src; delete v.dataset.src; }
+  };
+
+  // Gentle idle pre-warm when film is NOT streaming: center loop (477 KB) + radial poster trickle
+  addEventListener('load', () => {
+    setTimeout(() => {
+      if (!isFilmBusy()) hydrateHeroLoop();
+      const queue = periphVideos();
+      let idx = 0;
+      const tick = () => {
+        if (idx >= queue.length || box.classList.contains('walled')) return;
+        if (!isFilmBusy()) {
+          const v = queue[idx++];
+          if (v.dataset.poster) { v.poster = v.dataset.poster; delete v.dataset.poster; }
+        }
+        setTimeout(tick, 150);
       };
-      immediate ? apply() : setTimeout(apply, 600 + idx * 90);
-    });
-  };
-  let bgTimer = null;
-  const scheduleWallHydrate = (ms = 4500) => {
-    if (wallHydrated || bgTimer) return;
-    bgTimer = setTimeout(() => hydrateWall(false), ms);
-  };
-  filmv.addEventListener('playing', () => scheduleWallHydrate(4500), { once: true });
-  addEventListener('load', () => scheduleWallHydrate(9000), { once: true });
+      setTimeout(tick, 600);
+    }, 2000);
+  }, { once: true });
+
+  let stageInView = true;
+  new IntersectionObserver(es => es.forEach(e => {
+    stageInView = e.isIntersecting;
+    if (!box.classList.contains('walled') || $('#lb')?.classList.contains('on')) return;
+    if (stageInView) {
+      ensureHeroPlaying();
+      periphVideos().forEach(v => { if (!v.dataset.src) v.play().catch(() => {}); });
+    } else {
+      tileVideos().forEach(v => v.pause());
+    }
+  }), { threshold: 0.05 }).observe(box);
 
   const ensureHeroPlaying = () => {
-    if (!heroLoop || !box.classList.contains('walled') || $('#lb')?.classList.contains('on')) return;
+    if (!heroLoop || !stageInView || !box.classList.contains('walled') || $('#lb')?.classList.contains('on')) return;
+    hydrateHeroLoop();
     heroLoop.muted = true;
     if (heroLoop.paused) heroLoop.play().catch(() => {});
   };
@@ -420,39 +436,89 @@ $('#copy').addEventListener('click', e => {
     setInterval(ensureHeroPlaying, 600);
   }
 
+  // Radial ring-by-ring stream scheduler (max 4 concurrent video downloads so slow networks never stall!)
+  let wallPumpId = 0;
+  const pumpWallTiles = () => {
+    const myId = ++wallPumpId;
+    const ordered = periphVideos();
+    // Ensure all lightweight posters show immediately with zero black boxes
+    ordered.forEach(v => {
+      if (v.dataset.poster) { v.poster = v.dataset.poster; delete v.dataset.poster; }
+    });
+    let cursor = 0, active = 0;
+    const MAX_CONC = 4;
+    const launchNext = () => {
+      if (myId !== wallPumpId || !box.classList.contains('walled')) return;
+      while (active < MAX_CONC && cursor < ordered.length) {
+        const v = ordered[cursor++];
+        v.muted = true;
+        if (!v.dataset.src && v.readyState >= 3) {
+          v.play().catch(() => {});
+          continue;
+        }
+        active++;
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          active--;
+          launchNext();
+        };
+        if (v.dataset.src) { v.src = v.dataset.src; delete v.dataset.src; }
+        v.addEventListener('canplay', finish, { once: true });
+        v.addEventListener('error', finish, { once: true });
+        setTimeout(finish, 700);
+        v.play().catch(() => {});
+      }
+    };
+    launchNext();
+  };
+
+  const startFilm = (fromZero = false) => {
+    wallPumpId++;
+    box.classList.remove('walled'); wrap.classList.remove('walled');
+    tileVideos().forEach(v => v.pause());
+    box.classList.add('started');
+    filmv.controls = true;
+    if (fromZero) filmv.currentTime = 0;
+    filmv.muted = false;
+    const p = filmv.play();
+    if (p && p.catch) {
+      p.catch(() => {
+        filmv.muted = true;
+        filmv.play().catch(() => {});
+      });
+    }
+  };
+
   const toWall = () => {
     // Full-frame fade-out from the outer perimeter — never shrink into a central square!
-    hydrateWall(true);
     filmv.pause();
     box.classList.add('walled'); wrap.classList.add('walled');
     ensureHeroPlaying();
-    tileVideos().forEach((v, idx) => {
-      if (v === heroLoop) return;
-      v.muted = true;
-      setTimeout(() => {
-        if (box.classList.contains('walled')) v.play().catch(() => {});
-      }, 120 + idx * 35);
-    });
+    pumpWallTiles();
   };
-  const toFilm = () => {
-    box.classList.remove('walled'); wrap.classList.remove('walled');
-    tileVideos().forEach(v => v.pause());
-    filmv.currentTime = 0; filmv.play().catch(() => {});
-  };
+  const toFilm = () => startFilm(true);
+
+  $('#filmplay')?.addEventListener('click', () => startFilm(false));
+  filmv.addEventListener('click', () => {
+    if (!box.classList.contains('started')) startFilm(false);
+  });
+  $('#watch-cta')?.addEventListener('click', e => {
+    e.preventDefault();
+    wrap.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'center' });
+    startFilm(false);
+  });
   filmv.addEventListener('ended', toWall);
   $('#skip').addEventListener('click', toWall);
   $('#replay').addEventListener('click', toFilm);
-  $('#sound').addEventListener('click', e => {
-    filmv.muted = !filmv.muted; e.target.textContent = filmv.muted ? '♪ Sound on' : '♪ Sound off';
-    if (!filmv.muted) filmv.play().catch(() => {});
-  });
   if (REDUCED) toWall();
 
   // Lightbox (clean title + team only, no small text clutter)
   const lb = $('#lb'), lbv = $('#lbv'); let cur = 0;
   const openLB = i => {
     cur = (i + T.length) % T.length; const t = T[cur];
-    lbv.poster = `static/wall/${t.poster}`; lbv.src = `static/wall/${t.hd}`; lbv.play().catch(() => {});
+    lbv.poster = `static/wall/${t.poster}?v=9`; lbv.src = `static/wall/${t.hd}?v=9`; lbv.play().catch(() => {});
     $('#lbt').textContent = t.title;
     const team = t.team ? `<b class="ta">${t.team[0]}</b> + <b class="tb">${t.team[1]}</b>` : '';
     $('#lbm').innerHTML = team;

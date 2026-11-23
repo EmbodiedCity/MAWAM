@@ -11,7 +11,7 @@
   <link rel="canonical" href="https://embodiedcity.github.io/MAWAM/">
   <link rel="icon" href="assets/icon.svg?v=4" type="image/svg+xml">
   <meta name="theme-color" content="#000000">
-  <link rel="stylesheet" href="static/css/style.css?v=8">
+  <link rel="stylesheet" href="static/css/style.css?v=9">
 </head>
 <body>
 
@@ -116,25 +116,28 @@
 
   <div class="cta rise" style="--d:.48s">
     <a class="btn btn-paper" href="assets/MAWAM.pdf?v=6" target="_blank" rel="noopener"><svg><use href="#i-paper"/></svg>Paper (PDF)</a>
-    <a class="btn" href="#film"><svg><use href="#i-play"/></svg>Watch the film</a>
+    <a class="btn" id="watch-cta" href="#film"><svg><use href="#i-play"/></svg>Watch the film</a>
     <span class="btn btn-ghost off" aria-disabled="true"><svg><use href="#i-code"/></svg>Code &middot; coming soon</span>
     <span class="btn btn-ghost off" aria-disabled="true">Data &middot; coming soon</span>
   </div>
 
   <div class="film-wrap" id="film">
     <div class="stagebox" id="stagebox">
-      <video class="film" id="filmv" autoplay muted playsinline preload="auto" poster="static/images/film_poster.jpg?v=8">
-        <source src="static/videos/mawam_film.mp4?v=8" type="video/mp4">
+      <video class="film" id="filmv" playsinline preload="none" poster="static/images/film_poster.jpg?v=9">
+        <source src="static/videos/mawam_film.mp4?v=9" type="video/mp4">
       </video>
+      <button class="film-play" id="filmplay" type="button" aria-label="Play film">
+        <span class="fp-ic"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+        <span>Play film &middot; 1:48</span>
+      </button>
       <div class="wall" id="wall" aria-label="All shots in the film"></div>
       <div class="filmbar" id="filmbar">
-        <button id="sound" aria-label="Sound on">♪ Sound on</button>
-        <button id="skip">Skip to all shots ↘</button>
+        <button id="skip" type="button">All shots ↘</button>
       </div>
     </div>
     <div class="wallbar" id="wallbar">
-      <span>Click any tile to inspect.</span>
-      <button id="replay">▶ Replay the film</button>
+      <span>Click any tile to inspect in HD.</span>
+      <button id="replay" type="button">▶ Watch the film</button>
     </div>
   </div>
 </header>
@@ -245,7 +248,7 @@
 
   <div class="wrap">
     <div class="clip reveal">
-      <video id="clipv" muted loop playsinline preload="none" data-poster="static/wall/door_main.jpg" data-src="static/wall/door_main_hd.mp4">
+      <video id="clipv" muted loop playsinline preload="none" data-poster="static/wall/door_main.jpg?v=9" data-src="static/wall/door_main_hd.mp4?v=9">
       </video>
       <div class="clip-cap">
         <h3 id="clipt">Open door, place pot</h3>
@@ -316,7 +319,7 @@
           </div>
         </div>
         <div class="tray-vid-box">
-          <video id="trayv" muted loop playsinline preload="none" data-poster="static/images/tray_imagination_exp.jpg" data-src="static/videos/tray_imagination_exp.mp4">
+          <video id="trayv" muted loop playsinline preload="none" data-poster="static/images/tray_imagination_exp.jpg?v=9" data-src="static/videos/tray_imagination_exp.mp4?v=9">
           </video>
           <span class="tv-tag tv-top">Imagined (dashed)</span>
           <span class="tv-tag tv-bot">Executed (solid)</span>
@@ -386,7 +389,7 @@
   <button class="lb-nav lb-prev" id="lbp" aria-label="Previous">‹</button>
   <button class="lb-nav lb-next" id="lbn" aria-label="Next">›</button>
 </div>
-<script src="static/wall/wall.js?v=8"></script>
-<script src="static/js/main.js?v=8"></script>
+<script src="static/wall/wall.js?v=9"></script>
+<script src="static/js/main.js?v=9"></script>
 </body>
 </html>

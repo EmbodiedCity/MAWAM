@@ -297,9 +297,20 @@ footer { padding: 28px 0 40px; border-top: 1px solid #1d1d1f; font-size: 12px; c
 
 /* ── film → wall (Point 10: smooth full-frame outer-perimeter fade-out, NO ugly center square shrink!) ── */
 .stagebox { position: relative; width: 100%; aspect-ratio: 16/9; border-radius: var(--r); overflow: hidden; }
-.stagebox .film { position: absolute; inset: 0; height: 100%; z-index: 3; transform-origin: 50% 50%;
+.stagebox .film { position: absolute; inset: 0; height: 100%; z-index: 3; transform-origin: 50% 50%; cursor: pointer;
   transition: opacity .85s var(--ease), transform 1.05s var(--ease); }
+.stagebox.started .film { cursor: default; }
 .stagebox.walled .film { opacity: 0; transform: scale(1.035); pointer-events: none; }
+.film-play { position: absolute; left: 18px; bottom: 16px; z-index: 5; display: inline-flex; align-items: center; gap: 10px;
+  font: 600 14px/1 inherit; font-family: inherit; color: #fff; background: rgba(20,20,22,.82);
+  border: 1px solid rgba(255,255,255,.18); border-radius: 999px; padding: 9px 18px 9px 11px; cursor: pointer;
+  backdrop-filter: saturate(180%) blur(16px); -webkit-backdrop-filter: saturate(180%) blur(16px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.22); transition: transform .25s var(--ease), background .2s, opacity .35s; }
+.film-play:hover { background: #0071e3; border-color: rgba(255,255,255,.3); transform: scale(1.03); }
+.film-play .fp-ic { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #0071e3; color: #fff; transition: background .2s, color .2s; }
+.film-play:hover .fp-ic { background: #fff; color: #0071e3; }
+.film-play svg { width: 14px; height: 14px; margin-left: 1px; }
+.stagebox.started .film-play, .stagebox.walled .film-play { opacity: 0; pointer-events: none; }
 .wall { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(6, 1fr);
   gap: 6px; z-index: 2; pointer-events: none; }
 .stagebox.walled .wall { pointer-events: auto; }
@@ -315,10 +326,13 @@ footer { padding: 28px 0 40px; border-top: 1px solid #1d1d1f; font-size: 12px; c
 .tile-w:hover .tl { opacity: 1; transform: none; }
 .tile-w.centre { grid-column: 5 / span 4; grid-row: 2 / span 4; background: #f5f5f7; cursor: default; }
 .tile-w.centre .tl { opacity: 1; transform: none; text-align: center; font-size: 13px; bottom: 10px; }
-.filmbar { position: absolute; right: 14px; bottom: 14px; z-index: 5; display: flex; gap: 8px; transition: opacity .4s; }
+.filmbar { position: absolute; right: 18px; bottom: 16px; z-index: 5; display: flex; gap: 8px; transition: opacity .35s, top .35s, bottom .35s; }
+.stagebox.started .filmbar { bottom: auto; top: 16px; }
 .stagebox.walled .filmbar { opacity: 0; pointer-events: none; }
-.filmbar button, .wallbar button { font: 600 13px/1 inherit; font-family: inherit; color: #1d1d1f; background: rgba(255,255,255,.86);
-  border: 0; border-radius: 999px; padding: 9px 14px; cursor: pointer; backdrop-filter: blur(10px); }
+.filmbar button, .wallbar button { font: 600 13.5px/1 inherit; font-family: inherit; color: #1d1d1f; background: rgba(255,255,255,.9);
+  border: 1px solid rgba(0,0,0,.08); border-radius: 999px; padding: 10px 16px; cursor: pointer; backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.12); transition: transform .2s var(--ease), background .2s; }
+.filmbar button:hover, .wallbar button:hover { background: #fff; transform: scale(1.03); }
 .wallbar { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; color: var(--dim); font-size: 14px;
   opacity: 0; transition: opacity .25s; pointer-events: none; }
 .film-wrap.walled .wallbar { opacity: 1; transition: opacity .6s .45s; pointer-events: auto; }
