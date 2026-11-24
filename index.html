@@ -11,7 +11,7 @@
   <link rel="canonical" href="https://embodiedcity.github.io/MAWAM/">
   <link rel="icon" href="assets/icon.svg?v=4" type="image/svg+xml">
   <meta name="theme-color" content="#000000">
-  <link rel="stylesheet" href="static/css/style.css?v=9">
+  <link rel="stylesheet" href="static/css/style.css?v=10">
 </head>
 <body>
 
@@ -52,6 +52,19 @@
     <symbol id="i-play" viewBox="0 0 24 24">
       <path d="M8 5v14l11-7z" fill="currentColor"/>
     </symbol>
+    <symbol id="i-arxiv" viewBox="0 0 24 24">
+      <path d="M5 4h14v16H5z" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linejoin="round"/>
+      <path d="M9 9h6M9 12.5h6M9 16h4" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-model" viewBox="0 0 24 24">
+      <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linejoin="round"/>
+      <path d="M12 12l8-4.5M12 12v9M12 12L4 7.5" fill="none" stroke="currentColor" stroke-width="1.85" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-data" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="6" rx="7.5" ry="3" fill="none" stroke="currentColor" stroke-width="1.85"/>
+      <path d="M4.5 6v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3V6" fill="none" stroke="currentColor" stroke-width="1.85"/>
+      <path d="M4.5 12v6c0 1.66 3.36 3 7.5 3s7.5-1.34 7.5-3v-6" fill="none" stroke="currentColor" stroke-width="1.85"/>
+    </symbol>
   </defs>
 </svg>
 
@@ -74,7 +87,10 @@
       <a href="#bench">MA-Bench</a>
       <a href="#method">Method</a>
       <a href="#imagine">Experiments</a>
-      <a href="assets/MAWAM.pdf?v=6" target="_blank" rel="noopener">Paper</a>
+      <a href="https://arxiv.org/abs/2611.29501" target="_blank" rel="noopener">arXiv</a>
+      <a href="https://arxiv.org/pdf/2611.29501" target="_blank" rel="noopener">Paper</a>
+      <a href="https://huggingface.co/EmbodiedCity/MAWAM" target="_blank" rel="noopener">Models</a>
+      <a href="https://huggingface.co/datasets/EmbodiedCity/MA-Bench" target="_blank" rel="noopener">Dataset</a>
       <a href="#cite">Cite</a>
     </div>
   </div>
@@ -115,10 +131,12 @@
   </div>
 
   <div class="cta rise" style="--d:.48s">
-    <a class="btn btn-paper" href="assets/MAWAM.pdf?v=6" target="_blank" rel="noopener"><svg><use href="#i-paper"/></svg>Paper (PDF)</a>
+    <a class="btn btn-paper" href="https://arxiv.org/pdf/2611.29501" target="_blank" rel="noopener"><svg><use href="#i-paper"/></svg>Paper (PDF)</a>
+    <a class="btn btn-ghost" href="https://arxiv.org/abs/2611.29501" target="_blank" rel="noopener"><svg><use href="#i-arxiv"/></svg>arXiv</a>
     <a class="btn" id="watch-cta" href="#film"><svg><use href="#i-play"/></svg>Watch the film</a>
+    <a class="btn btn-ghost" href="https://huggingface.co/EmbodiedCity/MAWAM" target="_blank" rel="noopener"><svg><use href="#i-model"/></svg>Models (HF)</a>
+    <a class="btn btn-ghost" href="https://huggingface.co/datasets/EmbodiedCity/MA-Bench" target="_blank" rel="noopener"><svg><use href="#i-data"/></svg>MA-Bench (HF)</a>
     <span class="btn btn-ghost off" aria-disabled="true"><svg><use href="#i-code"/></svg>Code &middot; coming soon</span>
-    <span class="btn btn-ghost off" aria-disabled="true">Data &middot; coming soon</span>
   </div>
 
   <div class="film-wrap" id="film">
@@ -369,7 +387,7 @@
   author  = {Rongze Tang and Chenyu Zhou and Jianjie Fang and Ziming Liu and
              Zhaolu Wang and Ziyou Wang and Xvyuan Liu and Wei Wu and
              Chen Gao and Yong Li and Zhibo Chen},
-  journal = {arXiv preprint},
+  journal = {arXiv preprint arXiv:2611.29501},
   year    = {2026}
 }</pre>
     </div>

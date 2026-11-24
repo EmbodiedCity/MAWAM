@@ -57,7 +57,7 @@ h5 { font-size: 19px; font-weight: 600; letter-spacing: -0.015em; margin: 64px 0
   transition: background .35s, border-color .35s, box-shadow .35s, padding .35s, border-radius .35s; }
 .navlogos img { height: 25px; width: auto; object-fit: contain; flex: none; }
 .navlogos img.logo-wide { height: 22px; }
-.nav-links { display: flex; gap: 24px; overflow-x: auto; scrollbar-width: none; }
+.nav-links { display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none; }
 .nav-links::-webkit-scrollbar { display: none; }
 .nav-links a { font-size: 13px; font-weight: 500; color: rgba(245,245,247,.84); text-decoration: none; white-space: nowrap; transition: color .2s; }
 .nav-links a:hover { color: #fff; }
@@ -96,8 +96,9 @@ h5 { font-size: 19px; font-weight: 600; letter-spacing: -0.015em; margin: 64px 0
 .btn-paper { background: #f5f5f7; color: #0b0b0c; }
 .btn-paper:hover { background: #ffffff; transform: scale(1.025); }
 .btn-ghost { background: rgba(255,255,255,.06); color: #d2d2d7; border-color: rgba(255,255,255,.18); }
+.btn-ghost:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.32); color: #ffffff; transform: scale(1.025); }
 .btn-ghost.off { color: #8e8e93; border-color: rgba(255,255,255,.14); cursor: default; }
-.btn-ghost.off:hover { background: rgba(255,255,255,.06); transform: none; }
+.btn-ghost.off:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.14); color: #8e8e93; transform: none; }
 .film-wrap { max-width: 1280px; margin: clamp(56px, 8vw, 96px) auto 0; transform-origin: 50% 0; will-change: transform; }
 .film { width: 100%; aspect-ratio: 16/9; border-radius: var(--r); background: #000; box-shadow: 0 0 0 1px rgba(255,255,255,.1), 0 40px 120px rgba(134,150,240,.16); }
 

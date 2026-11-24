@@ -2,7 +2,10 @@
 
 <p align="center">
   <a href="https://embodiedcity.github.io/MAWAM/"><b>🌐 Project Page</b></a> &nbsp;|&nbsp;
-  <a href="assets/MAWAM.pdf"><b>📄 Paper (PDF)</b></a>
+  <a href="https://arxiv.org/abs/2611.29501"><b>📚 arXiv</b></a> &nbsp;|&nbsp;
+  <a href="https://arxiv.org/pdf/2611.29501"><b>📄 Paper (PDF)</b></a> &nbsp;|&nbsp;
+  <a href="https://huggingface.co/EmbodiedCity/MAWAM"><b>🤗 Models</b></a> &nbsp;|&nbsp;
+  <a href="https://huggingface.co/datasets/EmbodiedCity/MA-Bench"><b>📦 MA-Bench</b></a>
 </p>
 
 **Rongze Tang**<sup>1,3</sup>, **Chenyu Zhou**<sup>2,3</sup>, **Jianjie Fang**<sup>4</sup>, **Ziming Liu**<sup>4</sup>, **Zhaolu Wang**<sup>3</sup>, **Ziyou Wang**<sup>4</sup>, **Xvyuan Liu**<sup>4</sup>, **Wei Wu**<sup>5</sup>, **Chen Gao**<sup>3,4,&dagger;</sup>, **Yong Li**<sup>4</sup>, **Zhibo Chen**<sup>1,3,&dagger;</sup>
@@ -29,7 +32,7 @@ World action models (WAMs) advance robot manipulation by grounding control in vi
   author  = {Rongze Tang and Chenyu Zhou and Jianjie Fang and Ziming Liu and
              Zhaolu Wang and Ziyou Wang and Xvyuan Liu and Wei Wu and
              Chen Gao and Yong Li and Zhibo Chen},
-  journal = {arXiv preprint},
+  journal = {arXiv preprint arXiv:2611.29501},
   year    = {2026}
 }
 ```
