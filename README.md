@@ -21,7 +21,7 @@
 World action models (WAMs) advance robot manipulation by grounding control in visual foresight, yet existing formulations remain single-embodiment. We present **MAWAM**, a multi-agent world action model that introduces the **agent** as a first-class modeling axis:
 
 - **Joint Spatiotemporal Imagination**: Within one unified causal sequence, joint self-attention aligns all robots' predicted future observations before decoding each robot's native embodiment actions.
-- **MA-Task Harness & MA-Bench**: Formalizing *multi-agent-necessary* manipulation along three axes (*why*, *when*, and *who*), our coding-agent co-evolution harness produces **MA-Bench**—seven closed-loop multi-robot tasks spanning asynchronous handoffs, cross-table partial observability, partially synchronous holds, and synchronous $SE(3)$ / dynamic co-manipulation across homogeneous and heterogeneous robot teams.
+- **MA-Task Harness & MA-Bench**: Formalizing *multi-agent-necessary* manipulation along three axes (*why*, *when*, and *who*), our coding-agent co-evolution harness produces **MA-Bench**—seven closed-loop multi-robot tasks spanning asynchronous handoffs, cross-table partial observability, partially synchronous holds, and synchronous $`SE(3)`$ / dynamic co-manipulation across homogeneous and heterogeneous robot teams.
 - **Simulation & Real-Robot Performance**: MAWAM achieves **82.7%** mean joint success on MA-Bench and **63.3%** real-time closed-loop joint success on a heterogeneous physical **Franka FR3 + dual-arm AgileX Cobot Magic** robot team.
 
 ## Citation
